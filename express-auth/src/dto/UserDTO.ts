@@ -22,12 +22,6 @@ export class RegisterUserDTO {
   @IsNotEmpty()
   @MinLength(6, { message: FIELD_VALIDATION.PASSWORD_LENGTH_ERROR })
   password!: string;
-
-  @IsOptional()
-  @IsEnum(["Admin", "Manager", "User"], {
-    message: FIELD_VALIDATION.INVALID_ROLE,
-  })
-  role?: Role;
 }
 
 export class LoginUserDTO {

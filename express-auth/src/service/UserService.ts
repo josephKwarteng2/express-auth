@@ -18,17 +18,16 @@ export class UserService {
     this.userRepository = new UserRepository();
   }
 
-  async register(userData: RegisterUserDTO): Promise<User> {
+  async register(userData: RegisterUserDTO, role: Role): Promise<User> {
     const existingUser = await this.userRepository.findByEmail(userData.email);
 
     if (existingUser) {
       throw new Error(ERROR_MESSAGES.EMAIL_ALREADY_EXISTS);
     }
 
-    const userRole = userData.role || Role.User;
     const user = await this.userRepository.createUser({
       ...userData,
-      role: userRole,
+      role,
     });
 
     return user;

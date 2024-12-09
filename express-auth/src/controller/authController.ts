@@ -3,6 +3,7 @@ import { LoginUserDTO, RegisterUserDTO } from "../dto/UserDTO";
 import { UserService } from "../service/UserService";
 import { catchAsync } from "../utils/errorHandler";
 import { validateDto } from "../middlewares/validate";
+import { Role } from "../models/types";
 
 export class AuthController {
   private userService: UserService;
@@ -22,8 +23,20 @@ export class AuthController {
       res: Response,
       next: NextFunction
     ): Promise<Response | void> => {
-      const userData: RegisterUserDTO = req.body;
-      const user = await this.userService.register(userData);
+      const userData: Omit<RegisterUserDTO, "role"> = req.body;
+
+      let role: Role;
+      if (req.path.includes("user")) {
+        role = Role.User;
+      } else if (req.path.includes("manager")) {
+        role = Role.Manager;
+      } else if (req.path.includes("admin")) {
+        role = Role.Admin;
+      } else {
+        return res.status(400).json({ message: "Invalid registration path" });
+      }
+
+      const user = await this.userService.register({ ...userData }, role);
 
       const { user: userWithoutPassword, token } = await this.userService.login(
         {
