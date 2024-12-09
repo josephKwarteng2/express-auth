@@ -3,3 +3,8 @@ export enum Role {
   User = "User",
   Manager = "Manager",
 }
+
+export interface AccessRefreshTokenPayload {
+  userId: string;
+  type: "access" | "refresh";
+}
