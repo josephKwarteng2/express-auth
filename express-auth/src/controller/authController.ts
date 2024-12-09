@@ -16,7 +16,7 @@ export class AuthController {
   createUserLoginValidation = validateDto(LoginUserDTO);
   createUserRegistrationValidation = validateDto(RegisterUserDTO);
 
-  register = catchAsync(
+  userRegistration = catchAsync(
     async (
       req: Request,
       res: Response,
@@ -32,7 +32,7 @@ export class AuthController {
         }
       );
 
-      res.cookie("accessToken", token, {
+      res.cookie("refreshToken", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         maxAge: 7 * 24 * 60 * 60 * 1000,
@@ -51,7 +51,7 @@ export class AuthController {
     }
   );
 
-  login = catchAsync(
+  userLogin = catchAsync(
     async (
       req: Request,
       res: Response,
@@ -60,7 +60,7 @@ export class AuthController {
       const loginData: LoginUserDTO = req.body;
       const { user, token } = await this.userService.login(loginData);
 
-      res.cookie("accessToken", token, {
+      res.cookie("refreshToken", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         maxAge: 7 * 24 * 60 * 60 * 1000,
