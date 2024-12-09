@@ -1,9 +1,9 @@
+import jwt from "jsonwebtoken";
 import * as bcrypt from "bcrypt";
 import { Role } from "../models/types";
 import UserRepository from "../repository/UserRepository";
 import { LoginUserDTO, RegisterUserDTO } from "../dto/UserDTO";
 import { User } from "../entity/User";
-import { generateJWT, verifyJWT } from "../utils/jwt-util";
 import { ERROR_MESSAGES } from "../constants/constants";
 
 export class UserService {
@@ -52,14 +52,14 @@ export class UserService {
       throw new Error(ERROR_MESSAGES.INVALID_CREDENTIALS);
     }
 
-    const token = generateJWT(
+    const token = jwt.sign(
       {
         id: user.id,
         email: user.email,
         role: user.role,
       },
       this.accessTokenSecret,
-      "15m"
+      { expiresIn: "15m" }
     );
 
     const { password, ...userWithoutPassword } = user;
@@ -69,10 +69,7 @@ export class UserService {
 
   async verifyToken(token: string): Promise<User | null> {
     try {
-      const payload = verifyJWT(token, this.accessTokenSecret);
-      if (!payload) {
-        throw new Error(ERROR_MESSAGES.INVALID_OR_EXPIRED_TOKEN);
-      }
+      const payload = jwt.verify(token, this.accessTokenSecret) as any;
       const user = await this.getUserById(payload.id);
       return user || null;
     } catch (error) {
