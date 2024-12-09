@@ -12,28 +12,28 @@ import { Role } from "../models/types";
 @Entity("users")
 export class User {
   @PrimaryGeneratedColumn("uuid")
-  id: string;
+  id!: string;
 
   @Column({ type: "varchar", length: 100 })
-  name: string;
+  name!: string;
 
   @Column({ type: "varchar", length: 100, unique: true })
-  email: string;
+  email!: string;
 
   @Column({ type: "varchar", select: false })
-  password: string;
+  password!: string;
 
-  @Column({ type: "enum", enum: [Role], default: Role.User })
-  role: Role;
+  @Column({ type: "enum", enum: Role, default: Role.User })
+  role!: Role;
 
   @Column({ type: "boolean", default: true })
-  is_active: boolean;
+  is_active!: boolean;
 
   @CreateDateColumn()
-  created_at: Date;
+  created_at!: Date;
 
   @UpdateDateColumn()
-  updated_at: Date;
+  updated_at!: Date;
 
   @BeforeInsert()
   async hashPassword() {
