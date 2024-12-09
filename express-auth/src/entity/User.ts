@@ -7,6 +7,7 @@ import {
   BeforeInsert,
 } from "typeorm";
 import * as bcrypt from "bcrypt";
+import { Role } from "../models/types";
 
 @Entity("users")
 export class User {
@@ -22,8 +23,8 @@ export class User {
   @Column({ type: "varchar", select: false })
   password: string;
 
-  @Column({ type: "enum", enum: ["admin", "manager", "user"], default: "user" })
-  role: "admin" | "manager" | "user";
+  @Column({ type: "enum", enum: [Role], default: Role.User })
+  role: Role;
 
   @Column({ type: "boolean", default: true })
   is_active: boolean;
