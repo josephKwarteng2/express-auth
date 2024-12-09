@@ -1,18 +1,41 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  BeforeInsert,
+} from "typeorm";
+import * as bcrypt from "bcrypt";
 
-@Entity()
+@Entity("users")
 export class User {
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
-    @PrimaryGeneratedColumn()
-    id: number
+  @Column({ type: "varchar", length: 100 })
+  name: string;
 
-    @Column()
-    firstName: string
+  @Column({ type: "varchar", length: 100, unique: true })
+  email: string;
 
-    @Column()
-    lastName: string
+  @Column({ type: "varchar", select: false })
+  password: string;
 
-    @Column()
-    age: number
+  @Column({ type: "enum", enum: ["admin", "manager", "user"], default: "user" })
+  role: "admin" | "manager" | "user";
 
+  @Column({ type: "boolean", default: true })
+  is_active: boolean;
+
+  @CreateDateColumn()
+  created_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
+
+  @BeforeInsert()
+  async hashPassword() {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
 }
