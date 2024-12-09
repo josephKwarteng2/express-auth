@@ -1,0 +1,9 @@
+services:
+  postgres:
+    image: "postgres:14.5"
+    ports:
+      - "5440:5432"
+    environment:
+      POSTGRES_USER: "express-auth-api"
+      POSTGRES_PASSWORD: "expressauthpassword"
+      POSTGRES_DB: "express-auth-api"
