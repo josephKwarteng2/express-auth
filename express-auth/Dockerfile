@@ -4,8 +4,7 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm install
-RUN npm install --save-dev @types/jsonwebtoken
+RUN npm install && npm install --save-dev @types/jsonwebtoken
 
 COPY start-with-delay.sh /usr/local/bin/start-with-delay.sh
 RUN chmod +x /usr/local/bin/start-with-delay.sh
