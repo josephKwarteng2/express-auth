@@ -54,8 +54,10 @@ pipeline {
                     EOF
                     sshpass -p ${LINODE_PASS} scp -o StrictHostKeyChecking=no -r ./* ${INSTANCE}:/root/empress-auth
                     sshpass -p ${LINODE_PASS} ssh -o StrictHostKeyChecking=no ${INSTANCE} << EOF
+                        echo "Listing files in /root/empress-auth"
+                        ls -la /root/empress-auth
+                        echo "Running docker-compose up -d"
                         cd /root/empress-auth
-                        ls -la
                         docker-compose up -d
                         exit
                     EOF
