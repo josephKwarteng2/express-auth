@@ -46,19 +46,20 @@ pipeline {
             echo 'Deploying to instance...'
             withCredentials([string(credentialsId: 'linode', variable: 'LINODE_PASS')]) {
                 sh '''
-                ls -la
-                cd express-auth || true && ls -la
-                sshpass -p ${LINODE_PASS} ssh -o StrictHostKeyChecking=no ${INSTANCE} << EOF
-                    mkdir -p empress-auth
-                    exit
-                EOF
-                sshpass -p ${LINODE_PASS} scp -o StrictHostKeyChecking=no -r ./express-auth/* ${INSTANCE}:/root/empress-auth
-                sshpass -p ${LINODE_PASS} ssh -o StrictHostKeyChecking=no ${INSTANCE} << EOF
-                    cd /root/empress-auth
-                    docker-compose up -d
-                    exit
-                EOF
-                '''
+                    ls -la
+                    cd express-auth
+                    sshpass -p ${LINODE_PASS} ssh -o StrictHostKeyChecking=no ${INSTANCE} << EOF
+                        mkdir -p /root/empress-auth
+                        exit
+                    EOF
+                    sshpass -p ${LINODE_PASS} scp -o StrictHostKeyChecking=no -r ./* ${INSTANCE}:/root/empress-auth
+                    sshpass -p ${LINODE_PASS} ssh -o StrictHostKeyChecking=no ${INSTANCE} << EOF
+                        cd /root/empress-auth
+                        ls -la
+                        docker-compose up -d
+                        exit
+                    EOF
+                    '''
                 }
             }
         }
