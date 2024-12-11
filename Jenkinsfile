@@ -9,6 +9,10 @@ pipeline {
 
     agent any
 
+    tools {
+        nodejs 'node'
+    }
+
     environment {
         INSTANCE = 'root@192.46.232.47'
     }
