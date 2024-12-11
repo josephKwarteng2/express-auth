@@ -7,7 +7,9 @@ def cleanup() {
 
 pipeline {
 
-    agent any
+    agent {
+        label 'agent1'
+    }
 
     tools {
         nodejs 'node'
