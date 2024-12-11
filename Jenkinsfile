@@ -31,12 +31,17 @@ pipeline {
         stage('Testing') {
             steps {
                 dir('express-auth') {
+                    try {
                     echo 'Testing...'
                     sh 'ls -la'
                     sh 'npm install'
                     sh 'npm test'
+                    cleanup()
+                    } catch (err) {
+                        echo 'Tests failed!'
+                        error(err)
+                    }
                 }
-                cleanup()
             }
         }
 
