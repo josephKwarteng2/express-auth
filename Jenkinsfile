@@ -48,11 +48,7 @@ pipeline {
                 sh '''
                     ls -la
                     cd express-auth
-                    sshpass -p ${LINODE_PASS} ssh -o StrictHostKeyChecking=no ${INSTANCE} << EOF
-                        mkdir -p /root/empress-auth
-                        exit
-                    EOF
-                    sshpass -p ${LINODE_PASS} scp -o StrictHostKeyChecking=no -r ./* ${INSTANCE}:/root/empress-auth
+                    sshpass -p ${LINODE_PASS} scp -o StrictHostKeyChecking=no -r ./* ${INSTANCE}:/root
                     sshpass -p ${LINODE_PASS} ssh -o StrictHostKeyChecking=no ${INSTANCE} << EOF
                         echo "Listing files in /root/empress-auth"
                         ls -la /root/empress-auth
