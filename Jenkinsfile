@@ -50,7 +50,7 @@ pipeline {
                     mkdir -p empress-auth
                     exit
                 EOF
-                sshpass -p ${LINODE_PASS} scp -o StrictHostKeyChecking=no -r * ${INSTANCE}:/root/empress-auth
+                sshpass -p ${LINODE_PASS} scp -o StrictHostKeyChecking=no -r ./express-auth/* ${INSTANCE}:/root/empress-auth
                 sshpass -p ${LINODE_PASS} ssh -o StrictHostKeyChecking=no ${INSTANCE} << EOF
                     cd /root/empress-auth
                     docker-compose up -d
