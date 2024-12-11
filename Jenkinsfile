@@ -31,6 +31,7 @@ pipeline {
         stage('Testing') {
             steps {
                 echo 'Testing...'
+                sh 'cd express-auth'
                 sh 'npm install'
                 sh 'npm test'
                 cleanup()
