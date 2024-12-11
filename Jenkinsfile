@@ -50,6 +50,7 @@ pipeline {
                     sshpass -p ${LINODE_PASS} scp -o StrictHostKeyChecking=no -r ./* ${INSTANCE}:/root
                     sshpass -p ${LINODE_PASS} ssh -o StrictHostKeyChecking=no ${INSTANCE} << EOF
                         cd /root
+                        chmod +x /root/start-with-delay.sh
                         docker compose down
                         docker system prune -f
                         docker compose up -d --build
