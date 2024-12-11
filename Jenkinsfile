@@ -30,10 +30,12 @@ pipeline {
 
         stage('Testing') {
             steps {
-                echo 'Testing...'
-                sh 'cd express-auth'
-                sh 'npm install'
-                sh 'npm test'
+                dir('express-auth') {
+                    echo 'Testing...'
+                    sh 'ls -la'
+                    sh 'npm install'
+                    sh 'npm test'
+                }
                 cleanup()
             }
         }
