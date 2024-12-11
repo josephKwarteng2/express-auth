@@ -14,4 +14,4 @@ COPY . .
 
 EXPOSE 3000
 
-CMD ["usr/local/bin/start-with-delay.sh"]
+CMD ["/bin/sh", "usr/local/bin/start-with-delay.sh"]
