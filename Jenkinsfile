@@ -50,7 +50,7 @@ pipeline {
                     sshpass -p ${LINODE_PASS} scp -o StrictHostKeyChecking=no -r ./* ${INSTANCE}:/root
                     sshpass -p ${LINODE_PASS} ssh -o StrictHostKeyChecking=no ${INSTANCE} << EOF
                         cd /root
-                        docker compose up -d
+                        docker compose up -d --build
                         exit
                     EOF
                     '''
