@@ -35,6 +35,7 @@ pipeline {
                     sh 'npm install'
                     // sh 'npm test'
                     cleanup()
+                }
             }
         }
 
