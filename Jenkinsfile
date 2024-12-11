@@ -34,7 +34,7 @@ pipeline {
             steps {
                     dir('express-auth') {
                     echo 'Testing...'
-                    sh 'npm install'
+                    // sh 'npm install'
                     // sh 'npm test'
                     cleanup()
                 }
