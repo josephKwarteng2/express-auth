@@ -9,13 +9,13 @@ export class UserRepository {
     this.userRepository = AppDataSource.getRepository(User);
   }
 
-  async findByEmail(email: string): Promise<User | undefined> {
+  async findByEmail(email: string): Promise<User | null> {
     const user = await this.userRepository
       .createQueryBuilder("user")
       .where("user.email = :email", { email })
       .addSelect("user.password")
       .getOne();
-    return user ?? undefined;
+    return user || null;
   }
 
   async createUser(userData: Partial<User>): Promise<User> {
@@ -23,12 +23,16 @@ export class UserRepository {
     return this.userRepository.save(user);
   }
 
-  async findOne(id: string): Promise<User | undefined> {
+  async findOne(id: string): Promise<User | null> {
     const user = await this.userRepository.findOne({
       where: { id },
       select: ["id", "name", "email", "role", "is_active"],
     });
-    return user || undefined;
+    return user || null;
+  }
+
+  async save(user: User): Promise<User> {
+    return this.userRepository.save(user);
   }
 }
 
