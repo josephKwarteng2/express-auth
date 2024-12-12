@@ -4,7 +4,8 @@ import { Role } from "../models/types";
 import UserRepository from "../repository/UserRepository";
 import { LoginUserDTO, RegisterUserDTO } from "../dto/UserDTO";
 import { User } from "../entity/User";
-import { ERROR_MESSAGES } from "../constants/constants";
+import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "../constants/constants";
+import { sendVerificationEmail } from "../utils/email";
 
 export class UserService {
   private readonly userRepository: UserRepository;
@@ -14,11 +15,14 @@ export class UserService {
   constructor(accessTokenSecret: string, refreshTokenSecret: string) {
     this.accessTokenSecret = accessTokenSecret;
     this.refreshTokenSecret = refreshTokenSecret;
-
     this.userRepository = new UserRepository();
   }
 
   async register(userData: RegisterUserDTO, role: Role): Promise<User> {
+    if (![Role.User, Role.Manager].includes(role)) {
+      throw new Error(ERROR_MESSAGES.INVALID_ROLE);
+    }
+
     const existingUser = await this.userRepository.findByEmail(userData.email);
 
     if (existingUser) {
@@ -30,7 +34,32 @@ export class UserService {
       role,
     });
 
+    await sendVerificationEmail(user.email);
+
     return user;
+  }
+
+  async verifyEmail(verificationToken: string): Promise<string> {
+    try {
+      const decoded = jwt.verify(
+        verificationToken,
+        process.env.EMAIL_SECRET_KEY || ""
+      ) as { email: string };
+      const user = await this.userRepository.findByEmail(decoded.email);
+
+      if (!user) {
+        throw new Error(ERROR_MESSAGES.USER_NOT_FOUND);
+      }
+      user.verified = true;
+      await this.userRepository.save(user);
+
+      return SUCCESS_MESSAGES.EMAIL_VERIFIED;
+    } catch (error) {
+      if (error instanceof jwt.TokenExpiredError) {
+        throw new Error(ERROR_MESSAGES.EXPIRED_VERIFICATION_TOKEN);
+      }
+      throw new Error(ERROR_MESSAGES.INVALID_OR_EXPIRED_TOKEN);
+    }
   }
 
   async login(
@@ -51,6 +80,10 @@ export class UserService {
       throw new Error(ERROR_MESSAGES.INVALID_CREDENTIALS);
     }
 
+    if (!user.verified) {
+      throw new Error(ERROR_MESSAGES.EMAIL_NOT_VERIFIED);
+    }
+
     const token = jwt.sign(
       {
         id: user.id,
@@ -66,19 +99,9 @@ export class UserService {
     return { user: userWithoutPassword, token };
   }
 
-  async verifyToken(token: string): Promise<User | null> {
-    try {
-      const payload = jwt.verify(token, this.accessTokenSecret) as any;
-      const user = await this.getUserById(payload.id);
-      return user || null;
-    } catch (error) {
-      throw new Error(ERROR_MESSAGES.INVALID_OR_EXPIRED_TOKEN);
-    }
-  }
-
-  async getUserById(userId: string): Promise<User | undefined> {
+  async getUserById(userId: string): Promise<User | null> {
     const user = await this.userRepository.findOne(userId);
-    return user || undefined;
+    return user || null;
   }
 }
 
