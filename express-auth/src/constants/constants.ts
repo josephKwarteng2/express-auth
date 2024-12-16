@@ -17,4 +17,15 @@ export const ERROR_MESSAGES = {
   EMAIL_ALREADY_EXISTS: "Email already exists",
   UNAUTHORIZED: "Unauthorized",
   FORBIDDEN: "Forbidden",
+  INVALID_ROLE: "Forbidden",
+  USER_NOT_FOUND: "User not found",
+  EMAIL_NOT_VERIFIED: "Email not verified",
+  EXPIRED_VERIFICATION_TOKEN: "Expired verification token",
+};
+
+export const SUCCESS_MESSAGES = {
+  EMAIL_VERIFIED: "Email verified successfully",
+  REGISTRATION_SUCCESS:
+    "User registered successfully. Please verify your email.",
+  LOGIN_SUCCESS: "Login successful",
 };
