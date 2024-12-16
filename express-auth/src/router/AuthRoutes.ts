@@ -5,17 +5,12 @@ const authRoute = Router();
 const authController = new AuthController();
 
 authRoute.post(
-  "/register/user",
+  "/staff/register",
   authController.createUserRegistrationValidation,
   authController.userRegistration
 );
 authRoute.post(
-  "/register/manager",
-  authController.createUserRegistrationValidation,
-  authController.userRegistration
-);
-authRoute.post(
-  "/register/admin",
+  "/manager/register",
   authController.createUserRegistrationValidation,
   authController.userRegistration
 );
@@ -25,5 +20,7 @@ authRoute.post(
   authController.createUserLoginValidation,
   authController.userLogin
 );
+
+authRoute.get("/verify-email/:token", authController.emailVerification);
 
 export default authRoute;
