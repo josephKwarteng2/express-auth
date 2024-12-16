@@ -4,10 +4,7 @@ import {
   IsString,
   MinLength,
   MaxLength,
-  IsOptional,
-  IsEnum,
 } from "class-validator";
-import { Role } from "../models/types";
 import { FIELD_VALIDATION } from "../constants/constants";
 
 export class RegisterUserDTO {
